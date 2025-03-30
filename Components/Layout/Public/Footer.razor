@@ -1,0 +1,124 @@
+@using NATS.Models
+@namespace NATS.Components.Layout.Public
+
+<footer class="container-fluid bg-dark" id="footer">
+    <div class="container text-white">
+        <div class="row gx-4 gy-5 justify-content-center align-items-stretch px-3 py-5 pb-4">
+            <!-- Links - Left/Top column --> 
+            <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
+                <span class="fw-bold fs-4 opacity-75">
+                    Công ty
+                </span>
+        
+                <!-- SummaryItems -->
+                <NavLink href="@RouteHelper.GetPublicSummaryItemRoutePath()">
+                    Giới thiệu
+                </NavLink>
+                
+                <!-- AboutUs -->
+                <NavLink href="@RouteHelper.GetPublicSummaryItemRoutePath()">
+                    Về chúng tôi
+                </NavLink>
+        
+                <!-- News -->
+                <a>
+                    Tin tức
+                </a>
+                
+                <!-- Enquiry -->
+                <NavLink href="@RouteHelper.GetPublicEnquiryRoutePath()">
+                    Liên hệ
+                </NavLink>
+            </div>
+            
+            <!-- Links - Right/Bottom column --> 
+            <div class="col col-xl-2 col-lg-3 col-sm-6 col-12 links-column">
+                <span class="fw-bold fs-4 opacity-75">
+                    Lĩnh vực
+                </span>
+        
+                <!-- Services -->
+                <NavLink href="@RouteHelper.GetPublicServiceListRoutePath()">
+                    Dịch vụ
+                </NavLink>
+                
+                <!-- Courses -->
+                <NavLink href="@RouteHelper.GetPublicCourseListRoutePath()">
+                    Khóa học
+                </NavLink>
+            </div>
+
+            <!-- Contacts --> 
+            <div class="col col-xl-5 col-lg-6 col-12">
+                <span class="fw-bold fs-4 opacity-75">
+                    Liên hệ
+                </span>
+                
+                @foreach (ContactDetailModel contact in Model.Contacts)
+                {
+                    <div class="my-3">
+                        <!-- Label -->
+                        <i class="bi @ComputeContactIconClassName(contact) me-2"></i>
+
+                        <!-- Content -->
+                        @switch (contact.Type)
+                        {
+                            case ContactType.PhoneNumber:
+                                <a href="tel:@contact.Content">
+                                    @contact.Content
+                                </a>
+                                break;
+                            case ContactType.ZaloNumber:
+                                string zaloUrl = "https://zalo.me/" + contact.Content
+                                    .Replace(" ", "")
+                                    .Replace("+84", "0");
+                                <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                                    @contact.Content
+                                </a>
+                                break;
+                            case ContactType.Email:
+                                <a href="mailto:@contact.Content">
+                                    @contact.Content
+                                </a>
+                                break;
+                            case ContactType.Address:
+                                <a
+                                    href="https://maps.google.com/?q=@ComputeEncodedAddress()"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    @contact.Content
+                                </a>
+                                break;
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Logo -->
+            <div class="col d-flex flex-column justify-content-center align-items-center">
+                <div
+                    class="border border-4 rounded-circle d-flex
+                            justify-content-center align-items-center"
+                    id="footer-logo-container"
+                >
+                    <img
+                        src="/images/main-logo-transparent-white.png"
+                        alt=""
+                    />
+                </div>
+                
+                <div class="fw-bold fs-5 text-center mt-3">
+                    @Model.GeneralSettings.ApplicationName
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="col col-12 text-center">
+                Bản quyền ©@DateTime.UtcNow.ToApplicationTime().Year
+                thuộc về
+                <a href="https://facebook.com/huy.nino.97" class="fw-bold">Ngô Khánh Huy</a>
+            </div>
+        </div>
+    </div>
+</footer>

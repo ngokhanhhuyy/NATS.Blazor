@@ -1,0 +1,28 @@
+@page "/FormHandler"
+@namespace NATS.Components
+@using System.Text.Json
+<h3>FormHandler</h3>
+
+<EditForm EditContext="EditContext" OnValidSubmit="Authenticate" FormName="Form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label>UserName</label>
+    <InputText @bind-Value="Model.UserName"/>
+    <ValidationMessage For="() => Model.UserName" />
+    <br/>
+    
+    <label>Password</label>
+    <InputText type="password" @bind-Value="Model.Password"/>
+    <ValidationMessage For="() => Model.Password" />
+    <br/>
+    
+    <button type="submit">Submit</button>
+
+    <span>@CurrentValue</span>
+    @foreach (int number in MyNumbers)
+    {
+        <span>@number</span>
+    }
+    
+    <pre>@JsonSerializer.Serialize(Model, new JsonSerializerOptions())</pre>
+</EditForm>
