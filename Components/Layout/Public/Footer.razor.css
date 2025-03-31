@@ -1,0 +1,23 @@
+footer ::deep a {
+    color: white !important;
+}
+
+footer ::deep a:not(:hover) {
+    text-decoration: none;
+}
+
+footer .links-column ::deep a {
+    margin-top: .75rem;
+    margin-bottom: .75rem;
+    display: block;
+}
+
+.footer-logo-container {
+    width: 150px;
+    height: auto;
+    aspect-ratio: 1;
+}
+
+.footer-logo-container img {
+    width: 65%;
+}

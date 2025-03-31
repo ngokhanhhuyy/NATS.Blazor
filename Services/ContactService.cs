@@ -13,15 +13,20 @@ public class ContactService
             AbstractUpsertableService<Contact, ContactUpsertRequestDto>,
             IContactService
 {
-    
-    public ContactService(DatabaseContext context) : base(context)
+    private readonly IDbContextFactory<DatabaseContext> _contextFactory;
+
+    public ContactService(
+            DatabaseContext context,
+            IDbContextFactory<DatabaseContext> contextFactory) : base(context)
     {
+        _contextFactory = contextFactory;
     }
     
     /// <inheritdoc />
     public async Task<List<ContactResponseDto>> GetListAsync()
     {
-        return await Context.Contacts
+        DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        return await context.Contacts
             .Select(contact => new ContactResponseDto(contact))
             .ToListAsync();
     }
@@ -29,7 +34,8 @@ public class ContactService
     /// <inheritdoc />
     public async Task<ContactResponseDto> GetSingleAsync(int id)
     {
-        return await Context.Contacts
+        DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        return await context.Contacts
             .Where(c => c.Id == id)
             .Select(dto => new ContactResponseDto(dto))
             .SingleOrDefaultAsync()

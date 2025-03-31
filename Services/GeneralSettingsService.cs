@@ -12,15 +12,21 @@ public class GeneralSettingsService
         AbstractUpsertableService<GeneralSettings, GeneralSettingsUpdateRequestDto>,
         IGeneralSettingsService
 {
+    private readonly IDbContextFactory<DatabaseContext> _contextFactory;
+
     /// <inheritdoc />
-    public GeneralSettingsService(DatabaseContext context) : base(context)
+    public GeneralSettingsService(
+            DatabaseContext context,
+            IDbContextFactory<DatabaseContext> contextFactory) : base(context)
     {
+        _contextFactory = contextFactory;
     }
 
     /// <inheritdoc />
     public async Task<GeneralSettingsResponseDto> GetAsync()
     {
-        return await Context.GeneralSettings
+        DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        return await context.GeneralSettings
             .Select(gs => new GeneralSettingsResponseDto(gs))
             .SingleAsync();
     }

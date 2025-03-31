@@ -1,0 +1,39 @@
+@using NATS.Services.Enums;
+@namespace NATS.Components.Layout.Public
+
+<div class="my-3">
+    <!-- Label -->
+    <i class="bi @IconClassName me-2"></i>
+
+    <!-- Content -->
+    @switch (Model.Type)
+    {
+        case ContactType.PhoneNumber:
+            <a href="tel:@Model.Content">
+                @Model.Content
+            </a>
+            break;
+        case ContactType.ZaloNumber:
+            string zaloUrl = "https://zalo.me/" + Model.Content
+                .Replace(" ", "")
+                .Replace("+84", "0");
+            <a href='@zaloUrl' target="_blank" rel="noopener noreferrer">
+                @Model.Content
+            </a>
+            break;
+        case ContactType.Email:
+            <a href="mailto:@Model.Content">
+                @Model.Content
+            </a>
+            break;
+        case ContactType.Address:
+            <a
+                href="https://maps.google.com/?q=@EncodedAddress"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                @Model.Content
+            </a>
+            break;
+    }
+</div>

@@ -1,7 +1,7 @@
-@namespace NATS.Components.Layout.Public;
+@namespace NATS.Components.Layout.Public
 
 <li class="nav-item">
-    <NavLink href="nav-link @Href" class="@ClassName">
+    <NavLink href="@Href" class="@($"nav-link {ClassName}")">
         @ChildContent
     </NavLink>
 </li>

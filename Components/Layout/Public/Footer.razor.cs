@@ -47,7 +47,7 @@ public partial class Footer : ComponentBase
     private class FooterModel
     {
         public GeneralSettingsDetailModel GeneralSettings { get; set; }
-        public List<ContactDetailModel> Contacts { get; set; }
+        public List<ContactDetailModel> Contacts { get; set; } = new();
     }
     #endregion
 }

@@ -59,3 +59,16 @@ nav .navbar-nav .nav-item .nav-link.active {
     background-color: var(--navbar-foreground-color) !important;
     color: var(--navbar-background-color);
 }
+
+
+@media (max-width: 1200px) {
+    nav {
+        height: auto !important;
+    }
+}
+
+@media (max-width: 992px) {
+    nav .offcanvas {
+        max-width: 300px;
+    }
+}
