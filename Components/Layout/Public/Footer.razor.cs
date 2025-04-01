@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Components;
 using NATS.Helpers;
 using NATS.Models;
 using NATS.Services.Dtos.ResponseDtos;
-using NATS.Services.Extensions;
 using NATS.Services.Interfaces;
 
 namespace NATS.Components.Layout.Public;
