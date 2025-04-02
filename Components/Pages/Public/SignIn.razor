@@ -1,0 +1,87 @@
+﻿@using NATS.Components.Layout
+@using NATS.Models
+@using NATS.Services.Dtos.RequestDtos
+@using NATS.Services.Interfaces
+@using NATS.Validation.Validators
+@using FluentValidation
+@namespace NATS.Components
+@inject IAuthenticationService AuthenticationService
+@inject IValidator<SignInRequestDto> Validator
+@layout MainLayout
+@code {
+    private class Model
+    {
+        public SignInModel SignIn { get; set; }
+        public GeneralSettingsDetailModel GeneralSettings { get; set; }
+    }
+
+    
+}
+
+
+<div class="container p-0 bg-success flex-fill d-flex
+            justify-content-center align-items-center">
+    <div class="row w-100 justify-content-center align-items-center">
+        <div class="col col-sm-auto col-12 p-0 m-sm-4 m-0 rounded-4 shadow
+                    bg-white form-container">
+            <!-- Header -->
+            <div class="d-flex justify-content-center align-items-center p-4 pb-2">
+                <img
+                    src="/images/main-logo-transparent-white.png"
+                    class="logo"
+                    alt={generalSettingsStore.applicationName}
+                />
+            </div>
+
+            <!-- Form -->
+            <EditForm class="bg-white p-3 w-100">
+                <!-- UserName -->
+                <div class="form-group mb-3">
+                    <div class="form-floating">
+                        <input
+                            type="text"
+                            name="userName"
+                            class={computeInputClassName("userName")}
+                            placeholder=""
+                            value={model.userName}
+                            onChange={(event) => {
+                                setModel((model) => ({ ...model, userName: event.target.value }));
+                            }}
+                        />
+                        <label htmlFor="userName">Tên tài khoản</label>
+                    </div>
+
+                    {modelState.hasError("userName") && (
+                        <span class="text-danger">{modelState.getMessage("userName")}</span>
+                    )}
+                </div>
+
+                {/* UserName */}
+                <div class="form-group mb-3">
+                    <div class="form-floating">
+                        <input
+                            type="password"
+                            name="password"
+                            class={computeInputClassName("password")}
+                            placeholder=""
+                            value={model.password}
+                            onChange={(event) => {
+                            setModel((model) => ({ ...model, password: event.target.value }));
+                            }}
+                        />
+                        <label htmlFor="password">Mật khẩu</label>
+                    </div>
+                        {modelState.hasError("password") && (
+                            <span class="text-danger">{modelState.getMessage("password")}</span>
+                        )}
+                    </div>
+
+                    {/* SubmitButton */}
+                    <button type="submit" class="btn btn-success w-100">
+                        Đăng nhập
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
