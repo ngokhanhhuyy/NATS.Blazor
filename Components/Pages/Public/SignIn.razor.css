@@ -4,13 +4,14 @@
     width: 350px;
 }
 
-.logo {
+.logo-container {
+    background: transparent;
     width: 250px;
     height: 250px;
     padding: 3rem;
     border: 5px solid var(--bs-success);
-    border-radius: 50%;
     overflow: visible;
+    border-radius: 50%;
     filter:
         brightness(0)
         saturate(100%)

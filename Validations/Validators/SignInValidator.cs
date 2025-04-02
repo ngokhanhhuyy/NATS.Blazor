@@ -12,10 +12,10 @@ public class SignInValidator : Validator<SignInRequestDto>
         RuleFor(dto => dto.UserName)
             .NotNull()
             .NotEmpty()
-            .WithName(dto => DisplayNames.Get(nameof(dto.UserName)));
+            .WithName(DisplayNames.UserName);
         RuleFor(dto => dto.Password)
             .NotNull()
             .NotEmpty()
-            .WithName(dto => DisplayNames.Get(nameof(dto.Password)));
+            .WithName(DisplayNames.Password);
     }
 }

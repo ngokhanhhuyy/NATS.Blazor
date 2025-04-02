@@ -1,87 +1,123 @@
-﻿@using NATS.Components.Layout
+﻿@page "/SignIn"
+@using NATS.Components.Layout
+@using NATS.Extensions
 @using NATS.Models
 @using NATS.Services.Dtos.RequestDtos
+@using NATS.Services.Dtos.ResponseDtos
+@using NATS.Services.Exceptions
 @using NATS.Services.Interfaces
-@using NATS.Validation.Validators
 @using FluentValidation
+@using FluentValidation.Results
 @namespace NATS.Components
-@inject IAuthenticationService AuthenticationService
-@inject IValidator<SignInRequestDto> Validator
+@inject IAuthenticationService _authenticationService
+@inject IGeneralSettingsService _generalSettingsService
+@inject IValidator<SignInRequestDto> _validator
+@inject NavigationManager _navigationManager
 @layout MainLayout
 @code {
-    private class Model
+    private GeneralSettingsDetailModel _generalSettings;
+    private EditContext _editContext;
+    private ValidationMessageStore _validationMessageStore;
+    
+    [SupplyParameterFromForm]
+    public SignInModel Model { get; set; } = new SignInModel();
+
+    protected override void OnInitialized()
     {
-        public SignInModel SignIn { get; set; }
-        public GeneralSettingsDetailModel GeneralSettings { get; set; }
+        _editContext = new EditContext(Model);
+        _validationMessageStore = new ValidationMessageStore(_editContext);
     }
 
-    
+    protected override async Task OnInitializedAsync()
+    {
+        GeneralSettingsResponseDto generalSettingsResponseDto;
+        generalSettingsResponseDto = await _generalSettingsService.GetAsync();
+        _generalSettings = new GeneralSettingsDetailModel(generalSettingsResponseDto);
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        _validationMessageStore.Clear();
+        SignInRequestDto requestDto = Model.ToRequestDto();
+        ValidationResult validationResult = _validator.Validate(requestDto);
+        if (!validationResult.IsValid)
+        {
+            _validationMessageStore.AddFromValidationErrors(
+                _editContext,
+                validationResult.Errors);
+            return;
+        }
+
+        try
+        {
+            await _authenticationService.SignInAsync(requestDto);
+            _navigationManager.NavigateTo("/");
+        }
+        catch (OperationException exception)
+        {
+            _validationMessageStore.AddFromServiceException(_editContext, exception);
+        }
+
+        await Task.CompletedTask;
+    }
 }
 
 
-<div class="container p-0 bg-success flex-fill d-flex
+<div class="container-fluid p-0 bg-success flex-fill d-flex
             justify-content-center align-items-center">
     <div class="row w-100 justify-content-center align-items-center">
         <div class="col col-sm-auto col-12 p-0 m-sm-4 m-0 rounded-4 shadow
                     bg-white form-container">
             <!-- Header -->
             <div class="d-flex justify-content-center align-items-center p-4 pb-2">
-                <img
-                    src="/images/main-logo-transparent-white.png"
-                    class="logo"
-                    alt={generalSettingsStore.applicationName}
-                />
+                <div class="logo-container">
+                    <img
+                        src="/images/main-logo-transparent-white.png"
+                        class="logo w-100 h-100"
+                        alt="@_generalSettings?.ApplicationName"
+                    />
+                </div>
             </div>
 
             <!-- Form -->
-            <EditForm class="bg-white p-3 w-100">
+            <EditForm EditContext="_editContext" OnSubmit="HandleSubmitAsync"
+                   FormName="SignInForm" class="bg-white p-3 w-100">
                 <!-- UserName -->
                 <div class="form-group mb-3">
                     <div class="form-floating">
-                        <input
+                        <InputText
                             type="text"
-                            name="userName"
-                            class={computeInputClassName("userName")}
+                            class="form-control"
                             placeholder=""
-                            value={model.userName}
-                            onChange={(event) => {
-                                setModel((model) => ({ ...model, userName: event.target.value }));
-                            }}
+                            @bind-Value="Model.UserName"
                         />
-                        <label htmlFor="userName">Tên tài khoản</label>
+                        <label htmlFor="userName">
+                            Tên tài khoản
+                        </label>
                     </div>
 
-                    {modelState.hasError("userName") && (
-                        <span class="text-danger">{modelState.getMessage("userName")}</span>
-                    )}
+                    <ValidationMessage For="() => Model.UserName" />
                 </div>
 
-                {/* UserName */}
+                <!-- Password -->
                 <div class="form-group mb-3">
                     <div class="form-floating">
-                        <input
+                        <InputText
                             type="password"
-                            name="password"
-                            class={computeInputClassName("password")}
+                            class="form-control"
                             placeholder=""
-                            value={model.password}
-                            onChange={(event) => {
-                            setModel((model) => ({ ...model, password: event.target.value }));
-                            }}
+                            @bind-Value="Model.Password"
                         />
                         <label htmlFor="password">Mật khẩu</label>
                     </div>
-                        {modelState.hasError("password") && (
-                            <span class="text-danger">{modelState.getMessage("password")}</span>
-                        )}
-                    </div>
+                    <ValidationMessage For="() => Model.Password" />
+                </div>
 
-                    {/* SubmitButton */}
-                    <button type="submit" class="btn btn-success w-100">
-                        Đăng nhập
-                    </button>
-                </form>
-            </div>
+                <!-- SubmitButton -->
+                <button type="submit" class="btn btn-success w-100">
+                    Đăng nhập
+                </button>
+            </EditForm>
         </div>
     </div>
 </div>

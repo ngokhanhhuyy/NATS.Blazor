@@ -116,6 +116,19 @@ app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseAntiforgery();
 app.MapStaticAssets();
 app.UseStaticFiles();
+app.UseAuthentication();
+app.Use(async (context, next) =>
+{
+    bool isAuthenticated = context.User.Identity?.IsAuthenticated ?? false;
+    if (isAuthenticated && context.Request.Path == "/SignIn")
+    {
+        context.Response.Redirect("/");
+        return;
+    }
+
+    await next();
+});
+app.UseAuthorization();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
