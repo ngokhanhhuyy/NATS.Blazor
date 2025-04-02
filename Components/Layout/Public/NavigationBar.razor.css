@@ -43,7 +43,7 @@ nav button#navbar-toggler-button:hover {
     color: var(--navbar-background-color) !important;
 }
 
-nav .navbar-nav {
+nav ::deep .navbar-nav {
     --bs-nav-link-color: var(--navbar-foreground-color) !important;
     --bs-nav-link-hover-color: var(--navbar-foreground-color) !important;
     --bs-navbar-active-color: var(--navbar-foreground-color) !important;
@@ -54,12 +54,6 @@ nav .navbar-nav .nav-item .nav-link {
     padding: 3px 10px;
     border-radius: 8px;
 }
-
-nav .navbar-nav .nav-item .nav-link.active {
-    background-color: var(--navbar-foreground-color) !important;
-    color: var(--navbar-background-color);
-}
-
 
 @media (max-width: 1200px) {
     nav {

@@ -25,8 +25,9 @@ public partial class NavigationBarItem : ComponentBase
     private string ClassName
     {
         get
-        { 
+        {
             string currentPathName = new Uri(NavigationManager.Uri).AbsolutePath;
+            Console.WriteLine(currentPathName == "/" && Href == "/");
             if (currentPathName == "/" && Href == "/")
             {
                 return "active";
@@ -39,6 +40,15 @@ public partial class NavigationBarItem : ComponentBase
 
             return string.Empty;
         }
+    }
+    #endregion
+
+    #region LifeCycleEvents
+    protected override void OnInitialized()
+    {
+        Console.WriteLine(new Uri(NavigationManager.Uri).AbsolutePath);
+        Console.WriteLine(Href);
+        base.OnInitialized();
     }
     #endregion
 }

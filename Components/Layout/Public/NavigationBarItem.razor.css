@@ -1,5 +1,13 @@
-.nav-link {
+::deep .nav-link {
+    --bs-nav-link-color: var(--navbar-foreground-color) !important;
+    --bs-nav-link-hover-color: var(--navbar-foreground-color) !important;
+    --bs-navbar-active-color: var(--navbar-foreground-color) !important;
     margin-right: 15px;
     padding: 3px 10px;
     border-radius: 8px;
+}
+
+::deep .nav-link.active {
+    background-color: var(--bs-success) !important;
+    color: var(--bs-white);
 }
