@@ -24,7 +24,6 @@ html, body {
 
 body {
     min-height: 100vh;
-    scrollbar-gutter: stable;
 }
 
 input:not([type="checkbox"]):not(.invalid):not(.valid),

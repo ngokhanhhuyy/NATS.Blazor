@@ -1,0 +1,87 @@
+﻿@using NATS.Models
+@using NATS.Services.Dtos.RequestDtos
+@using NATS.Services.Dtos.ResponseDtos
+@using NATS.Services.Interfaces
+@namespace NATS.Components.Pages.Public
+@code {
+    #region Parameters
+    public List<SliderItemDetailModel> Model { get; set;}
+    #endregion
+
+    #region Computed
+    private List<string> ThumbnailUrls => Model.Select(si => si.ThumbnailUrl).ToList();
+    #endregion
+}
+
+<div class="container-fluid overflow-hidden position-relative bg-success p-0">
+    @if (Model != null)
+    {
+        for (int index = 0; index < ThumbnailUrls.Count; index++)
+        {
+            <div
+                class="carousel-background @(index == 0 ? "opacity-100" : "opacity-0")"
+                style="background: url(@Model[index].ThumbnailUrl)"
+                data-index="@index">
+            </div>
+        }
+        
+        <div class="carousel-container">
+            <div
+                id="slider"
+                class="carousel slide overflow-visible m-0 w-100 position-relative"
+                data-bs-ride="carousel"
+                data-bs-interval="5000"
+            >
+                <!-- Photos -->
+                <div class="carousel-inner">
+                    @for (int index = 0; index < Model.Count(); index++)
+                    {
+                        SliderItemDetailModel sliderItem = Model[index];
+                        <div class="carousel-item @(index == 0 ? "active" : "")">
+                            <img
+                                src="@sliderItem.ThumbnailUrl"
+                                class="carousel-img d-block w-100"
+                                alt="@sliderItem.Title"
+                            />
+                        </div>
+                    }
+                </div>
+
+                <!-- IndicatorButtons -->
+                <div class="carousel-indicators">
+                    @for (int index = 0; index < Model.Count(); index++)
+                    {
+                        <button
+                            type="button"
+                            class="@(index == 0 ? "active" : "")"
+                            data-bs-target="#slider"
+                            data-bs-slide-to="@index"
+                            aria-current="@(index == 0)"
+                            aria-label="Slide @index">
+                        </button>
+                    }
+                </div>
+
+                <!-- CarouoselControlButtons -->
+                <button
+                    class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#slider"
+                    data-bs-slide="prev"
+                >
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button
+                    class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#slider"
+                    data-bs-slide="next"
+                >
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    }
+</div>

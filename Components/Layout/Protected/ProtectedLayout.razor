@@ -1,0 +1,14 @@
+﻿@namespace NATS.Components.Layout.Protected
+@inherits LayoutComponentBase
+@layout MainLayout
+
+<div class="container-fluid bg-success-subtle h-100 w-100vw flex-fill d-flex flex-column
+            align-items-center justify-content-stretch p-0">
+    <div class="container border-start border-end border-success-subtle
+                bg-white bg-opacity-50 flex-fill p-0">
+        <!-- NavigationBar -->
+        <NavigationBar/>
+
+        @Body
+    </div>
+</div>

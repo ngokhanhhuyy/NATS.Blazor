@@ -1,0 +1,14 @@
+@namespace NATS.Components.Layout.Protected
+
+<nav class="bg-white border-bottom border-success-subtle px-3 py-1 d-flex align-items-center">
+    @if (_model != null)
+    {
+        <div class="logo-container">
+            <img src="/images/main-logo-transparent-white.png" class="logo" />
+        </div>
+
+        <h5 class="text-success m-0 ms-1">
+            @_model.GeneralSettings.ApplicationShortName
+        </h5>
+    }
+</nav>

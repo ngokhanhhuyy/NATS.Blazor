@@ -25,7 +25,7 @@ public class ContactService
     /// <inheritdoc />
     public async Task<List<ContactResponseDto>> GetListAsync()
     {
-        DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         return await context.Contacts
             .Select(contact => new ContactResponseDto(contact))
             .ToListAsync();
@@ -34,7 +34,7 @@ public class ContactService
     /// <inheritdoc />
     public async Task<ContactResponseDto> GetSingleAsync(int id)
     {
-        DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         return await context.Contacts
             .Where(c => c.Id == id)
             .Select(dto => new ContactResponseDto(dto))

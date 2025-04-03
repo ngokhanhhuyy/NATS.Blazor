@@ -29,7 +29,7 @@ public class CatalogItemService
     public async Task<List<CatalogItemBasicResponseDto>> GetListAsync(
             CatalogItemListRequestDto requestDto)
     {
-        DatabaseContext context = _contextFactory.CreateDbContext();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         IQueryable<CatalogItem> query = context.CatalogItems.OrderBy(ci => ci.Id);
 
         if (requestDto.Type.HasValue)
@@ -43,7 +43,7 @@ public class CatalogItemService
     /// <inheritdoc />
     public async Task<CatalogItemDetailResponseDto> GetDetailAsync(int id)
     {
-        DatabaseContext context = _contextFactory.CreateDbContext();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         return await context.CatalogItems
             .Include(ci => ci.Photos)
             .Where(ci => ci.Id == id)

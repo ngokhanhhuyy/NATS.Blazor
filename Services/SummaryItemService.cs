@@ -12,17 +12,21 @@ public class SummaryItemService
         AbstractHasThumbnailService<SummaryItem, SummaryItemUpdateRequestDto>,
         ISummaryItemService
 {
+    private readonly IDbContextFactory<DatabaseContext> _contextFactory;
 
     public SummaryItemService(
             DatabaseContext context,
+            IDbContextFactory<DatabaseContext> contextFactory,
             IPhotoService photoService) : base(context, photoService)
     {
+        _contextFactory = contextFactory;
     }
 
     /// <inheritdoc />
     public async Task<List<SummaryItemResponseDto>> GetListAsync()
     {
-        return await Context.SummaryItems
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        return await context.SummaryItems
             .OrderBy(summaryItem => summaryItem.Id)
             .Take(4)
             .Select(summaryItem => new SummaryItemResponseDto(summaryItem))
@@ -32,7 +36,8 @@ public class SummaryItemService
     /// <inheritdoc />
     public async Task<SummaryItemResponseDto> GetSingleAsync(int id)
     {
-        return await Context.SummaryItems
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        return await context.SummaryItems
             .Select(summaryItem => new SummaryItemResponseDto(summaryItem))
             .SingleOrDefaultAsync(ii => ii.Id == id)
             ?? throw GetResourceNotFoundExceptionById(id);

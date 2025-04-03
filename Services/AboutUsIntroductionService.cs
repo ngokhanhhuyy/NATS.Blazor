@@ -14,16 +14,21 @@ public class AboutUsIntroductionService
                 AboutUsIntroductionUpdateRequestDto>,
             IAboutUsIntroductionService
 {
+    private readonly IDbContextFactory<DatabaseContext> _contextFactory;
+
     public AboutUsIntroductionService(
             DatabaseContext context,
+            IDbContextFactory<DatabaseContext> contextFactory,
             IPhotoService photoService) : base(context, photoService)
     {
+        _contextFactory = contextFactory;
     }
 
     /// <inheritdoc />
     public async Task<AboutUsIntroductionResponseDto> GetAsync()
     {
-        return await Context.AboutUsIntroductions
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        return await context.AboutUsIntroductions
             .Select(aui => new AboutUsIntroductionResponseDto(aui))
             .SingleAsync();
     }

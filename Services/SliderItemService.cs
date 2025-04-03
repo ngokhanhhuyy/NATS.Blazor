@@ -24,7 +24,7 @@ public class SliderItemService
     /// <inheritdoc />
     public async Task<List<SliderItemResponseDto>> GetListAsync()
     {
-        DatabaseContext context = _contextFactory.CreateDbContext();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         return await context.SliderItems
             .OrderBy(sliderItem => sliderItem.Index)
             .Select(sliderItem => new SliderItemResponseDto(sliderItem))
@@ -34,7 +34,7 @@ public class SliderItemService
     /// <inheritdoc />
     public async Task<SliderItemResponseDto> GetSingleAsync(int id)
     {
-        DatabaseContext context = _contextFactory.CreateDbContext();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         return await context.SliderItems
             .Select(sliderItem => new SliderItemResponseDto(sliderItem))
             .SingleOrDefaultAsync(sliderItem => sliderItem.Id == id)

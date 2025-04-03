@@ -25,7 +25,7 @@ public class GeneralSettingsService
     /// <inheritdoc />
     public async Task<GeneralSettingsResponseDto> GetAsync()
     {
-        DatabaseContext context = await _contextFactory.CreateDbContextAsync();
+        await using DatabaseContext context = await _contextFactory.CreateDbContextAsync();
         return await context.GeneralSettings
             .Select(gs => new GeneralSettingsResponseDto(gs))
             .SingleAsync();

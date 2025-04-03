@@ -40,30 +40,10 @@ builder.Services.Configure<IdentityOptions>(options => {
 builder.Services.ConfigureApplicationCookie(options => {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    options.LoginPath = "/Login";
-    options.LogoutPath = "/Logout";
+    options.LoginPath = "/SignIn";
+    options.LogoutPath = "/SignOur";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
-    
-    Func<RedirectContext<CookieAuthenticationOptions>, Task> authRedirectInterceptor;
-    authRedirectInterceptor = context =>
-    {
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        return Task.CompletedTask;
-    };
-    
-
-    options.Events.OnRedirectToLogin = authRedirectInterceptor;
-    options.Events.OnRedirectToAccessDenied = authRedirectInterceptor;
-
-    Func<RedirectContext<CookieAuthenticationOptions>, Task> logoutRedirectInterceptor;
-    logoutRedirectInterceptor = context =>
-    {
-        context.Response.StatusCode = StatusCodes.Status200OK;
-        return Task.CompletedTask;
-    };
-
-    options.Events.OnRedirectToLogout = logoutRedirectInterceptor;
 });
 
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme);

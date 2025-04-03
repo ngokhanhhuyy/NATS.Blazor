@@ -18,11 +18,16 @@
     private GeneralSettingsDetailModel _generalSettings;
     private EditContext _editContext;
     private ValidationMessageStore _validationMessageStore;
-    private bool _isAuthenticating;
     
+    #region Parameters
     [SupplyParameterFromForm]
     public SignInModel Model { get; set; } = new SignInModel();
 
+    [SupplyParameterFromQuery]
+    public string ReturnUrl { get; set; }
+    #endregion
+
+    #region LifeCycleMethods
     protected override void OnInitialized()
     {
         _editContext = new EditContext(Model);
@@ -35,10 +40,11 @@
         generalSettingsResponseDto = await _generalSettingsService.GetAsync();
         _generalSettings = new GeneralSettingsDetailModel(generalSettingsResponseDto);
     }
+    #endregion
 
+    #region Callbacks
     private async Task HandleSubmitAsync()
     {
-        _isAuthenticating = true;
         _validationMessageStore.Clear();
         try
         {
@@ -51,9 +57,16 @@
                     validationResult.Errors);
                 return;
             }
-            await Task.Delay(1500);
             await _authenticationService.SignInAsync(requestDto);
-            _navigationManager.NavigateTo("/");
+
+            if (!string.IsNullOrWhiteSpace(ReturnUrl))
+            {
+                _navigationManager.NavigateTo(ReturnUrl);
+            }
+            else
+            {
+                _navigationManager.NavigateTo("/");
+            }
         }
         catch (OperationException exception)
         {
@@ -61,10 +74,10 @@
         }
         finally
         {
-            _isAuthenticating = false;
             await Task.CompletedTask;
         }
     }
+    #endregion
 }
 
 
@@ -72,7 +85,7 @@
             justify-content-center align-items-center">
     <div class="row w-100 justify-content-center align-items-center">
         <div class="col col-sm-auto col-12 p-0 m-sm-4 m-0 rounded-4 shadow
-                    bg-white form-container">
+                    bg-white form-container fade-animation fade-animation-reverse">
             <!-- Header -->
             <div class="d-flex justify-content-center align-items-center p-4 pb-2">
                 <div class="logo-container">
@@ -119,19 +132,8 @@
                 </div>
 
                 <!-- SubmitButton -->
-                <button
-                    type="submit"
-                    class="btn btn-success w-100"
-                    disabled="@_isAuthenticating"
-                >
-                    @if (!_isAuthenticating)
-                    {
-                        <span>Đăng nhập</span>
-                    }
-                    else
-                    {
-                        <span>Waiting...</span>
-                    }
+                <button type="submit" class="btn btn-success w-100">
+                    Đăng nhập
                 </button>
             </EditForm>
         </div>
