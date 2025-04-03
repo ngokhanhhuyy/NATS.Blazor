@@ -6,9 +6,9 @@ using NATS.Services.Dtos.ResponseDtos;
 using NATS.Services.Enums;
 using NATS.Services.Interfaces;
 
-namespace NATS.Components.Pages.Public;
+namespace NATS.Components.Pages.Protected.Home;
 
-public partial class HomePage : ComponentBase
+public partial class ContentPage : ComponentBase
 {
     #region DependencyInjection
     private readonly ISliderItemService _sliderItemService;
@@ -18,12 +18,12 @@ public partial class HomePage : ComponentBase
     private readonly ICatalogItemService _catalogItemService;
     private readonly IRouteHelper _routeHelper;
     #endregion
-
+    
     #region States
-    private HomePageModel _model;
+    private ContentPageModel _model;
     #endregion
 
-    public HomePage(
+    public ContentPage(
             ISliderItemService sliderItemService,
             ISummaryItemService summaryItemService,
             IGeneralSettingsService generalSettingsService,
@@ -66,7 +66,7 @@ public partial class HomePage : ComponentBase
             summaryItemResponseDtosTask,
             catalogItemResponseDtosTask);
 
-        _model = new HomePageModel
+        _model = new ContentPageModel
         {
             SliderItems = sliderItemResponseDtosTask.Result
                 .Select(dto => new SliderItemDetailModel(dto))
@@ -93,9 +93,9 @@ public partial class HomePage : ComponentBase
         };
     }
     #endregion
-
+    
     #region ModelStructure
-    private class HomePageModel
+    private class ContentPageModel
     {
         public List<SliderItemDetailModel> SliderItems { get; init; }
         public List<SummaryItemDetailModel> SummaryItems { get; init; }

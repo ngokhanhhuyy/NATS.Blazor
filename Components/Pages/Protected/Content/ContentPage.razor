@@ -2,11 +2,18 @@
 @attribute [Authorize]
 @using Microsoft.AspNetCore.Authorization
 @using NATS.Components.Layout.Protected
-@using NATS.Models
-@using BlazorPageScript
-@namespace NATS.Components.Pages.Protected
+@namespace NATS.Components.Pages.Protected.Home
 @layout ProtectedLayout
 
 <PageTitle>Nội dung</PageTitle>
 <PageScript Src="./Components/Pages/Protected/Content/ContentPage.razor.js" />
 
+@if (_model != null)
+{
+    <div class="row g-3">
+        <div class="col col-lg-6 col-12">
+            <SliderItemList Model="@_model.SliderItems" Class="mb-3" />
+            <SummaryItemList Model="@_model.SummaryItems" Class="mb-3"/>
+        </div>
+    </div>
+}

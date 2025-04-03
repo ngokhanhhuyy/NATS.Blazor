@@ -1,0 +1,112 @@
+@using NATS.Components.Layout.Protected
+@using NATS.Models
+@namespace NATS.Components.Pages.Protected.Home
+
+<MainBlock
+    Title="Trình chiếu ảnh trang chủ"
+    BodyPadding="@null"
+    BodyClass="@Class"
+>
+    <!-- Header -->
+    <HeaderContent>
+        <a href="#" class="btn btn-success btn-sm">
+            <i class="bi bi-plus-lg"></i>
+            <span class="d-sm-inline d-none">Tạo mới</span>
+        </a>
+    </HeaderContent>
+    
+    <ChildContent>
+        <!-- Carousel -->
+        <div
+            id="slider"
+            class="carousel slide overflow-visible m-3 position-relative img-thumbnail"
+            data-bs-ride="carousel"
+            data-bs-interval="5000"
+        >
+            <!-- Photos -->
+            <div class="carousel-inner">
+                @for (int index = 0; index < Model.Count(); index++)
+                {
+                    SliderItemDetailModel sliderItem = Model[index];
+                    <div class="carousel-item @(index == 0 ? "active" : "")">
+                        <img
+                            src="@sliderItem.ThumbnailUrl"
+                            class="carousel-img d-block w-100"
+                            alt="@sliderItem.Title"
+                        />
+                    </div>
+                }
+            </div>
+
+            <!-- IndicatorButtons -->
+            <div class="carousel-indicators">
+                @for (int index = 0; index < Model.Count(); index++)
+                {
+                    <button
+                        type="button"
+                        class="@(index == 0 ? "active" : "")"
+                        data-bs-target="#slider"
+                        data-bs-slide-to="@index"
+                        aria-current="@(index == 0)"
+                        aria-label="Slide @index">
+                    </button>
+                }
+            </div>
+
+            <!-- CarouoselControlButtons -->
+            <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#slider"
+                data-bs-slide="prev"
+            >
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#slider"
+                data-bs-slide="next"
+            >
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        
+        <!-- List -->
+        <ul class="list-group list-group-flush border-top">
+            @foreach (SliderItemDetailModel sliderItem in Model)
+            {
+                <li class="list-group-item bg-transparent d-flex align-items-center">
+                    <!-- Thumbnail -->
+                    <img
+                        src="@sliderItem.ThumbnailUrl"
+                        class="img-thumbnail thumbnail"
+                        alt="Ảnh #@sliderItem.Id"
+                    />
+                    
+                    <!-- Detail -->
+                    <div class="ms-2 flex-fill d-flex flex-column">
+                        <span class="fw-bold text-success">
+                            @(sliderItem.Title ?? $"Ảnh #{sliderItem.Id}")
+                        </span>
+                        
+                        <span class="small opacity-50">
+                            Ảnh #@sliderItem.Id
+                        </span>
+                    </div>
+                    
+                    <!-- EditLink -->
+                    <a
+                        href="@_routeHelper.GetPublicHomeRoutePath()"
+                        class="btn btn-outline-success btn-sm flex-shrink-0 ms-3"
+                    >
+                        <i class="bi bi-pencil-square"></i>
+                        <span class="d-sm-inline d-none ms-1">Sửa</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </ChildContent>
+</MainBlock>

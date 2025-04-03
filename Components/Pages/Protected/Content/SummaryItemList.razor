@@ -1,0 +1,39 @@
+@using NATS.Components.Layout.Protected
+@using NATS.Models
+@namespace NATS.Components.Pages.Protected.Home
+
+<MainBlock Title="Giới thiệu" BodyPadding="@null">
+    <ul class="list-group list-group-flush">
+        @foreach (SummaryItemDetailModel summaryItem in Model)
+        {
+            <li class="list-group-item bg-transparent d-flex align-items-center">
+                <!-- Thumbnail -->
+                <img
+                    src="@summaryItem.ThumbnailUrl"
+                    class="img-thumbnail thumbnail rounded-circle"
+                    alt="@summaryItem.Name"
+                />
+                    
+                <!-- Detail -->
+                <div class="ms-2 flex-fill d-flex flex-column detail">
+                    <span class="fw-bold text-success">
+                        @summaryItem.Name
+                    </span>
+                    
+                    <span class="small opacity-50">
+                        @summaryItem.SummaryContent
+                    </span>
+                </div>
+                    
+                <!-- EditLink -->
+                <a
+                    href="@_routeHelper.GetPublicHomeRoutePath()"
+                    class="btn btn-outline-success btn-sm flex-shrink-0 ms-3"
+                >
+                    <i class="bi bi-pencil-square"></i>
+                    <span class="d-sm-inline d-none ms-1">Sửa</span>
+                </a>
+            </li>
+        }
+    </ul>
+</MainBlock>

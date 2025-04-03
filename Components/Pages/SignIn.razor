@@ -9,75 +9,8 @@
 @using FluentValidation
 @using FluentValidation.Results
 @namespace NATS.Components
-@inject IAuthenticationService _authenticationService
-@inject IGeneralSettingsService _generalSettingsService
-@inject IValidator<SignInRequestDto> _validator
-@inject NavigationManager _navigationManager
 @layout MainLayout
 @code {
-    private GeneralSettingsDetailModel _generalSettings;
-    private EditContext _editContext;
-    private ValidationMessageStore _validationMessageStore;
-    
-    #region Parameters
-    [SupplyParameterFromForm]
-    public SignInModel Model { get; set; } = new SignInModel();
-
-    [SupplyParameterFromQuery]
-    public string ReturnUrl { get; set; }
-    #endregion
-
-    #region LifeCycleMethods
-    protected override void OnInitialized()
-    {
-        _editContext = new EditContext(Model);
-        _validationMessageStore = new ValidationMessageStore(_editContext);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        GeneralSettingsResponseDto generalSettingsResponseDto;
-        generalSettingsResponseDto = await _generalSettingsService.GetAsync();
-        _generalSettings = new GeneralSettingsDetailModel(generalSettingsResponseDto);
-    }
-    #endregion
-
-    #region Callbacks
-    private async Task HandleSubmitAsync()
-    {
-        _validationMessageStore.Clear();
-        try
-        {
-            SignInRequestDto requestDto = Model.ToRequestDto();
-            ValidationResult validationResult = _validator.Validate(requestDto);
-            if (!validationResult.IsValid)
-            {
-                _validationMessageStore.AddFromValidationErrors(
-                    _editContext,
-                    validationResult.Errors);
-                return;
-            }
-            await _authenticationService.SignInAsync(requestDto);
-
-            if (!string.IsNullOrWhiteSpace(ReturnUrl))
-            {
-                _navigationManager.NavigateTo(ReturnUrl);
-            }
-            else
-            {
-                _navigationManager.NavigateTo("/");
-            }
-        }
-        catch (OperationException exception)
-        {
-            _validationMessageStore.AddFromServiceException(_editContext, exception);
-        }
-        finally
-        {
-            await Task.CompletedTask;
-        }
-    }
-    #endregion
 }
 
 

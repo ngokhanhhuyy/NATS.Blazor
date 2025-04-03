@@ -1,0 +1,15 @@
+@namespace NATS.Components.Layout.Protected
+
+<div class="d-flex flex-column">
+    <div class="bg-success-subtle border border-success-subtle rounded-top-3
+                d-flex justify-content-between align-items-center @HeaderComputedClass">
+        <span class="fw-bold small text-success">@Title.ToUpper()</span>
+        
+        @HeaderContent
+    </div>
+
+    <div class="bg-white border border-top-0 border-success-subtle
+                flex-fill rounded-bottom-3 @BodyComputedClass">
+        @ChildContent
+    </div>
+</div>
